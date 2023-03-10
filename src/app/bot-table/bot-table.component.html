@@ -1,0 +1,163 @@
+<div class="new_repo">
+<button pButton pRipple label="New Repository" (click)="Create_repo()" icon="pi pi-plus" class="p-button"></button>
+</div>
+<p-tabView>
+    <p-tabPanel header="BOT REPO">
+        <div class="card">
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="ADD" icon="pi pi-plus" (click)="addfile()" ></button>
+                </ng-template>
+                
+                <ng-template pTemplate="right">
+                    <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"  placeholder="Search BOT" />
+                    </span>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt  [value]="Apivalue" (sortFunction)="customSort($event)" [customSort]="true" [tableStyle]="{'min-width': '60rem'}" [paginator]="true" [rows]="rows" [showCurrentPageReport]="true" [(first)]="first" [tableStyle]="{'min-width': '50rem'}"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [globalFilterFields]="['bot_name','version','bot_configuration_id','created_by','updated_date']">
+            
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="bot_name" style="width:20%">BotName <p-sortIcon field="bot_name"></p-sortIcon><p-columnFilter type="text" field="bot_name" display="menu"></p-columnFilter></th>
+                        <th pSortableColumn="version" style="width:20%">Version <p-sortIcon field="version"></p-sortIcon><p-columnFilter type="text" field="version" display="menu"></p-columnFilter></th>
+                        <th pSortableColumn="bot_configuration_id" style="width:20%">BotConfigId <p-sortIcon field="bot_configuration_id"></p-sortIcon><p-columnFilter type="number" field="bot_configuration_id" display="menu"></p-columnFilter></th>
+                        <th pSortableColumn="created_by" style="width:20%">Owner <p-sortIcon field="created_by"></p-sortIcon><p-columnFilter type="text" field="created_by" display="menu"></p-columnFilter></th>
+                        <th pSortableColumn="updated_date" style="width:20%">UpdateTime <p-sortIcon field="updated_date"></p-sortIcon><p-columnFilter type="date" field="updated_date" display="menu"></p-columnFilter></th>
+                        <th>Download</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-bot>
+                    <tr (dblclick)="showDialog(bot.bot_configuration_id)">
+                        <td>{{bot.bot_name}}</td>
+                        <td>{{bot.version}}</td>
+                        <td>{{bot.bot_configuration_id}}</td>
+                        <td>{{bot.created_by}}</td>
+                        <td>{{bot.updated_date | date }}</td>
+                        <td><i class="pi pi-cloud-download" ></i></td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="HAR REPO">
+            <div class="card">
+                <p-toolbar styleClass="mb-4 gap-2">
+                    <ng-template pTemplate="left">
+                        <p-dropdown [options]="options" [(ngModel)]="selected_option" (onChange)="ChangePaxType($event)"optionLabel="name" placeholder="Add File" [showClear]="true" [editable]="true" ></p-dropdown> 
+
+                    </ng-template>
+                    
+                    <ng-template pTemplate="right">
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"  placeholder="Search BOT" />
+                        </span>
+                    </ng-template>
+                </p-toolbar>
+    
+                <p-table #dt  [value]="HAR_Data" (sortFunction)="customSort($event)" [customSort]="true" [tableStyle]="{'min-width': '60rem'}" [paginator]="true" [rows]="rows" [showCurrentPageReport]="true" [(first)]="first" [tableStyle]="{'min-width': '50rem'}"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [globalFilterFields]="['bot_name','version','bot_configuration_id','created_by','updated_date']">
+                
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="bot_name" style="width:20%">FolderName <p-sortIcon field="bot_name"></p-sortIcon><p-columnFilter type="text" field="bot_name" display="menu"></p-columnFilter></th>
+                            <th pSortableColumn="version" style="width:20%">Type of Repository <p-sortIcon field="version"></p-sortIcon><p-columnFilter type="text" field="version" display="menu"></p-columnFilter></th>
+                            <th pSortableColumn="bot_configuration_id" style="width:20%">Size<p-sortIcon field="bot_configuration_id"></p-sortIcon><p-columnFilter type="number" field="bot_configuration_id" display="menu"></p-columnFilter></th>
+                            <th pSortableColumn="created_by" style="width:20%">Owner <p-sortIcon field="created_by"></p-sortIcon><p-columnFilter type="text" field="created_by" display="menu"></p-columnFilter></th>
+                            <th pSortableColumn="updated_date" style="width:20%">UpdateTime <p-sortIcon field="updated_date"></p-sortIcon><p-columnFilter type="date" field="updated_date" display="menu"></p-columnFilter></th>
+                            <th>Download</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-HAR_Data>
+                        <tr>
+                            <td>{{HAR_Data}}</td>
+                            <td>txt.file</td>
+                            <td>txt.file</td>
+                            <td>txt.file</td>
+                            <td>txt.file</td>
+
+                            <td><i class="pi pi-cloud-download" ></i></td>
+                        </tr>
+                    </ng-template>
+    
+                </p-table>
+        </div>        
+    </p-tabPanel>
+  
+</p-tabView>
+
+<!-- Bot Details -->
+<p-dialog [(visible)]="bot_info" [style]="{width: '30vw'}">
+    <div *ngFor="let val of botdetail | keyvalue">
+       <p *ngIf="val.key === 'bot_name'" class="dialogheader"><b>{{val.value}}</b></p>
+        <p *ngIf="val.key === 'minimum_cpu_percent_per_core'">Minimum CPU Percent : {{ val.value }}</p>
+        <p *ngIf="val.key === 'minimum_ram'">Minium Ram : {{ val.value }}</p>
+        <p *ngIf="val.key === 'is_active'">Is Active : {{ val.value }}</p>
+        <p *ngIf="val.key === 'processing_limit'">Processing Limt : {{ val.value }}</p>
+        <p *ngIf="val.key === 'delay_to'">Delay To : {{ val.value }}</p>
+        <p *ngIf="val.key === 'site_id'">Site Id : {{ val.value }}</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Download" icon="pi pi-cloud-download" (click)="display=false"></button>
+    </ng-template>
+</p-dialog>
+
+<!-- AddfILE -->
+<p-dialog [(visible)]="add_bot" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+    <ng-template pTemplate="header" >
+        <p class="dialogheader"><b>Add File</b></p>
+     </ng-template>
+     <label for="username1" class="block">File Name</label>
+     <div class="p-inputgroup">
+         <input  [(ngModel)]="file_name" input id="username1" type="text" pInputText placeholder="File Name">         
+     </div>
+     <label for="username2" class="block">File Content</label>
+     <div class="p-inputgroup">
+         <input  [(ngModel)]="content" input id="username2" type="text" pInputText placeholder="File Content">         
+     </div>
+     <div class="footer">
+        <p-button label="Create" (click)="createfile()"></p-button>
+    </div>   
+</p-dialog>
+<!--Create-repo-->
+<p-dialog [(visible)]="create_repo" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+    <ng-template pTemplate="header" >
+        <p class="dialogheader"><b>Repository Registeration</b></p>
+     </ng-template>
+     <div class="card">
+        <label for="username1" class="block">Repository Name:</label>
+        <div class="p-inputgroup">
+            <input  [(ngModel)]="name" input id="username1" type="text" pInputText>         
+        </div><br>
+    <label for="username1" class="block">Select a Service Provider:</label><br>
+  <p-dropdown class="flex align-items-center justify-content-center" [options]="cities" [(ngModel)]="selected_option" placeholder="Select a Service Provider" optionLabel="name" [showClear]="true"></p-dropdown><br>
+<br><label for="visibility" class="block">Visibility:</label>
+<p-selectButton [options]="stateOptions" input id="visibility" [(ngModel)]="value1" optionLabel="label" optionValue="value" (onChange)="visibility_fn($event)" ></p-selectButton>
+</div> 
+<div class="footer">
+    <p-button label="Create" (click)="createfolder()"></p-button>
+</div>    
+</p-dialog>
+<!-- Upload_dialogue -->
+<p-dialog [(visible)]="upload" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+    <ng-template pTemplate="header">
+        <p class="dialogheader"><b>Upload File</b></p>
+     </ng-template>
+     <label for="username1" class="block">Folder Name:</label>
+     <div class="p-inputgroup">
+         <input  [(ngModel)]="upload_name" input id="username1" type="text" pInputText>         
+     </div><br>
+     <p-fileUpload  url="http://localhost:34610/api/File_Upload/uploadfile" (onUpload)="onUpload($event)"
+             accept="image/*">
+            <ng-template pTemplate="content">
+                <ul *ngIf="uploadedFiles.length">
+                    <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                </ul>
+            </ng-template>
+    </p-fileUpload>
+</p-dialog>

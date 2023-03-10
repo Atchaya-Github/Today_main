@@ -1,0 +1,38 @@
+.dialogheader{
+    font-size:x-large;
+} 
+.card{
+    width: 90%;
+    margin-left: 5%;
+    padding-top:2%;
+}
+.main-content{
+  padding-left: 5%;
+}
+.search-container {
+    
+    width: 100px;
+    margin-left: 80%;
+  }
+ ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #e3e3e3ca;
+  }
+
+  ::ng-deep  .p-datatable .p-datatable-thead > tr > th {
+    background-color:#008d62;
+    color: #ffffff;
+  }
+  
+  ::ng-deep .p-datatable .p-datatable-tbody >tr {
+    background-color: #ffffff;
+  }
+  .footer{
+    padding-top: 3%;
+  }
+  .new_repo{
+    padding-bottom: 1%;
+  }
+
+  /* :host ::ng-deep .p-tabView .p-tabView-panels{
+    background-color: red
+  } */
